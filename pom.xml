@@ -9,7 +9,7 @@
 	<properties>
 		<maven.compiler.target>15</maven.compiler.target>
 		<maven.compiler.source>15</maven.compiler.source>
-		<exec.mainClass>Main</exec.mainClass>
+		<exec.mainClass>Main.main</exec.mainClass>
 	</properties>
 
 	<dependencies>
