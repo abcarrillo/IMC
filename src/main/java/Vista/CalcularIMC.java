@@ -2,6 +2,9 @@ package Vista;
 
 import Modelo.IMC;
 import javafx.application.Application;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.NumberBinding;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -11,6 +14,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
+import javafx.util.converter.NumberStringConverter;
 
 
 
@@ -21,57 +26,69 @@ public class CalcularIMC extends Application {
 	private Label IMCText;
 	private Label textoInfo;
 	private IMC imc = new IMC();
+	StringConverter<Number> converter = new NumberStringConverter();
+	SimpleStringProperty resultado = new SimpleStringProperty();
+	
+	private SimpleStringProperty darInfo() {
+		double indice = imc.indiceProperty().get();
+		String texto = "";
+		
+		if(indice < 18.5) {
+			texto = "Bajo peso";
+		}else if (18.5 <= indice && indice < 25) {
+			texto = "Peso normal";
+		}else if(25<= indice && indice < 30){
+			texto = "Sobrepeso";
+		}else {
+			texto = "Obesidad";
+		}
+		resultado.set(texto);
+		return resultado;
+	}
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		
 		
-		
 		pesoText = new TextField();
 		pesoText.setPrefColumnCount(4);
-		pesoText.textProperty().addListener(event->{
-			if(pesoText.textProperty().get() != "") {
-				imc.setPeso(Double.parseDouble(pesoText.textProperty().get()));
-				
-				double indice = imc.calcularIndice();
-				String texto = "";
-				IMCText.setText("IMC: " + indice);
-				if(indice < 18.5) {
-					texto = "Bajo peso";
-				}else if (18.5 <= indice && indice < 25) {
-					texto = "Peso normal";
-				}else if(25<= indice && indice < 30){
-					texto = "Sobrepeso";
-				}else {
-					texto = "Obesidad";
-				}
-				textoInfo.setText(texto);
-			}
-		});
+		pesoText.textProperty().bindBidirectional(imc.pesoProperty(), converter);
 		
 		alturaText = new TextField();
 		alturaText.setPrefColumnCount(4);
-		alturaText.textProperty().addListener(event->{
-			if(alturaText.textProperty().get() != "") {
-				imc.setAltura(Double.parseDouble(alturaText.textProperty().get()));
-
-				double indice = imc.calcularIndice();
-				String texto = "";
-				IMCText.setText("IMC: " + indice);
-				if(indice < 18.5) {
-					texto = "Bajo peso";
-				}else if (18.5 <= indice && indice < 25) {
-					texto = "Peso normal";
-				}else if(25<= indice && indice < 30){
-					texto = "Sobrepeso";
-				}else {
-					texto = "Obesidad";
-				}
-				textoInfo.setText(texto);
-			}
-		});
-		IMCText = new Label("IMC: " + imc.calcularIndice());
-		textoInfo = new Label("");
+		alturaText.textProperty().bindBidirectional(imc.alturaProperty(), converter);
+		
+		
+		IMCText = new Label();
+		IMCText.textProperty().bind(imc.indiceProperty().asString());
+		
+		
+		textoInfo = new Label("Aqui deberia aparecer info");
+		
+		
+		
+		textoInfo.textProperty().bind(Bindings.when(imc.indiceProperty()
+				.greaterThanOrEqualTo(18.5)
+				.and( imc.indiceProperty().lessThan(25)))
+				.then("Normal")
+				.otherwise(""));
+		
+		textoInfo.textProperty().bind(Bindings.when(imc.indiceProperty()
+				.greaterThanOrEqualTo(25)
+				.and( imc.indiceProperty().lessThan(30)))
+				.then("Sobrepeso")
+				.otherwise(""));
+		
+		textoInfo.textProperty().bind(Bindings.when(imc.indiceProperty()
+				.greaterThanOrEqualTo(30))
+				.then("Obesidad")
+				.otherwise(""));
+		
+		textoInfo.textProperty().bind(Bindings.when(imc.indiceProperty()
+				.lessThan(18.5))
+				.then("Bajo Peso")
+				.otherwise(""));
+		
 		
 		
 		HBox alturaBox = new HBox();
@@ -109,6 +126,8 @@ public class CalcularIMC extends Application {
 		primaryStage.setTitle("Calcular IMC");
 		primaryStage.show();
 	}
+	
+	
 	
 	public static void main(String[] args) {
 		launch(args);

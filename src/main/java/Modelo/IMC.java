@@ -2,17 +2,19 @@ package Modelo;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleStringProperty;
 
 public class IMC {
-	private DoubleProperty altura;
-	private DoubleProperty peso;
-	private DoubleProperty indice;
+	private SimpleDoubleProperty altura;
+	private SimpleDoubleProperty peso;
+	private SimpleDoubleProperty indice;
 	
-	public double calcularIndice() {
-		return this.getPeso() / Math.pow(this.getAltura()/100, 2);
+	
+	public final SimpleDoubleProperty indiceProperty() {
+		return this.indice;
 	}
 
-	public final DoubleProperty alturaProperty() {
+	public final SimpleDoubleProperty alturaProperty() {
 		return this.altura;
 	}
 
@@ -24,7 +26,7 @@ public class IMC {
 		this.alturaProperty().set(altura);
 	}
 
-	public final DoubleProperty pesoProperty() {
+	public final SimpleDoubleProperty pesoProperty() {
 		return this.peso;
 	}
 
@@ -39,6 +41,9 @@ public class IMC {
 	public IMC() {
 		this.altura = new SimpleDoubleProperty();
 		this.peso = new SimpleDoubleProperty();
+		this.indice = new SimpleDoubleProperty();
+		
+		indice.bind(pesoProperty().divide( (alturaProperty().divide(100).multiply(alturaProperty().divide(100))) ));
 	}
 
 }
