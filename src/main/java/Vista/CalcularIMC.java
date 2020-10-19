@@ -66,7 +66,7 @@ public class CalcularIMC extends Application {
 		textoInfo = new Label("Aqui deberia aparecer info");
 		
 		
-		
+		/*
 		textoInfo.textProperty().bind(Bindings.when(imc.indiceProperty()
 				.greaterThanOrEqualTo(18.5)
 				.and( imc.indiceProperty().lessThan(25)))
@@ -88,7 +88,7 @@ public class CalcularIMC extends Application {
 				.lessThan(18.5))
 				.then("Bajo Peso")
 				.otherwise(""));
-		
+		*/
 		
 		
 		HBox alturaBox = new HBox();
