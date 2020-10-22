@@ -64,31 +64,24 @@ public class CalcularIMC extends Application {
 		
 		
 		textoInfo = new Label("Aqui deberia aparecer info");
+		imc.indiceProperty().addListener(listener->{
+			double indice = imc.indiceProperty().get();
+			String texto = "";
+			if(indice < 18.5) {
+				texto = "Peso bajo";
+			}else if(indice >= 18.5 && indice < 25) {
+				texto = "normal";
+			}else if(indice >= 25 && indice < 30){
+				texto = "Sobrepeso";
+			}else {
+				texto = "Obesidad";
+			}
+			textoInfo.setText(texto);
+		});
 		
 		
-		/*
-		textoInfo.textProperty().bind(Bindings.when(imc.indiceProperty()
-				.greaterThanOrEqualTo(18.5)
-				.and( imc.indiceProperty().lessThan(25)))
-				.then("Normal")
-				.otherwise(""));
 		
-		textoInfo.textProperty().bind(Bindings.when(imc.indiceProperty()
-				.greaterThanOrEqualTo(25)
-				.and( imc.indiceProperty().lessThan(30)))
-				.then("Sobrepeso")
-				.otherwise(""));
 		
-		textoInfo.textProperty().bind(Bindings.when(imc.indiceProperty()
-				.greaterThanOrEqualTo(30))
-				.then("Obesidad")
-				.otherwise(""));
-		
-		textoInfo.textProperty().bind(Bindings.when(imc.indiceProperty()
-				.lessThan(18.5))
-				.then("Bajo Peso")
-				.otherwise(""));
-		*/
 		
 		
 		HBox alturaBox = new HBox();
